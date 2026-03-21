@@ -143,6 +143,8 @@ const ChatBase = ({
   const typingIndicator = typingIndicatorText ? (
     <div style={{
       position: 'relative',
+      /* Below chat-completions (z-index 2) so tab completion list stays on top */
+      zIndex: 1,
     }}>
       <div style={{
         fontSize: '9px',
