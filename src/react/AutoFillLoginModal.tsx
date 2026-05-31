@@ -386,7 +386,8 @@ export default () => {
   const pendingResultRef = useRef<AutoFillLoginResult | undefined>(undefined)
 
   const identifier = `${serverIp}-${username}`
-  const usesSafariSaveStep = isSafari && (mode === 'register' || mode === 'changepassword')
+  // eslint-disable-next-line sonarjs/no-redundant-boolean
+  const usesSafariSaveStep = isSafari && (mode === 'register' || mode === 'changepassword') && false
 
   const finishSubmit = (result: AutoFillLoginResult) => {
     setError('')
