@@ -1,4 +1,5 @@
 import { getInitialPlayerState, getPlayerStateUtils, PlayerStateReactive, PlayerStateRenderer, PlayerStateUtils } from 'minecraft-renderer/src/playerState/playerState'
+import { states } from 'minecraft-protocol'
 import { subscribe } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
 import { HandItemBlock } from 'minecraft-renderer/src/playerState/types'
@@ -115,7 +116,7 @@ export class PlayerStateControllerMain {
     })
 
     const clientState = bot._client?.state
-    if (clientState && clientState !== 'handshaking') {
+    if (clientState && clientState !== states.HANDSHAKING) {
       console.log('[playerState] inject_allowed already fired before attach', {
         clientState,
         eyeHeight: this.reactive?.eyeHeight,

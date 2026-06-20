@@ -67,7 +67,7 @@ const ButtonBase = (({ label, icon, children, inScreen, rootRef, type = 'button'
     args.className = `${args.className ?? ''} settings-text-container-long`
   }
 
-  if (icon && style.width == null) {
+  if (icon && (style.width === null || style.width === undefined)) {
     style.width = 20
   }
 
