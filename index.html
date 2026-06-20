@@ -14,6 +14,14 @@
         configurable: false
       });
     </script>
+    <script>
+      // NextConsole: mount on <html>, not <body> — body.rotated uses transform and breaks fixed UI.
+      (function () {
+        var root = document.createElement('div')
+        root.id = 'next-console-root'
+        document.documentElement.appendChild(root)
+      })()
+    </script>
     <!-- // #region initial loader -->
     <script async>
       const loadingDiv = /* html */ `
@@ -61,7 +69,7 @@
                 document.querySelector('.initial-loader').querySelector('.ios-warning').style.display = 'block';
               }
 
-              if (window.navigator.maxTouchPoints > 1) window.location.hash = '#dev' // show eruda
+              if (window.navigator.maxTouchPoints > 1) window.location.hash = '#dev' // show NextConsole
               // unregister all sw
               if (window.navigator.serviceWorker && document.querySelector('.initial-loader').style.opacity !== 0) {
                 console.log('got worker')
@@ -89,12 +97,9 @@
         })
     </script>
     <script type="module" async>
-      const checkLoadEruda = () => {
+      const parseLastErrorStack = () => {
         if (window.location.hash === '#dev') {
-          // todo precache (check offline)?
-          import('https://cdn.skypack.dev/eruda').then(({ default: eruda }) => {
-            eruda.init()
-          })
+          // NextConsole: loaded once from src/loadDevConsole.ts (avoid double init with devReload)
           Promise.all([import('https://cdn.skypack.dev/stacktrace-gps'), import('https://cdn.skypack.dev/error-stack-parser')]).then(async ([{ default: StackTraceGPS }, { default: ErrorStackParser }]) => {
             if (!window.lastError) return
 
@@ -116,10 +121,10 @@
           })
         }
       }
-      checkLoadEruda()
+      parseLastErrorStack()
       window.addEventListener('hashchange', (e) => {
         setTimeout(() => {
-          checkLoadEruda()
+          parseLastErrorStack()
         })
       })
     </script>
