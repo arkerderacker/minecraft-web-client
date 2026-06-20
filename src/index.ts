@@ -7,6 +7,7 @@ import './devtools'
 import './entities'
 import customChannels from './customChannels'
 import './globalDomListeners'
+import './displayRotation'
 import './mineflayer/maps'
 import './mineflayer/cameraShake'
 import './shims/patchShims'
@@ -635,11 +636,12 @@ export async function connect (connectOptions: ConnectOptions) {
       // "mapDownloader-saveInternal": false, // do not save into memory, todo must be implemeneted as we do really care of ram
     }) as unknown as typeof __type_bot
     window.bot = bot
-
     if (connectOptions.viewerWsConnect) {
       void onBotCreatedViewerHandler()
     }
+    // Keep synchronous — no await before emit
     customEvents.emit('mineflayerBotCreated')
+
     if (singleplayer || p2pMultiplayer || localReplaySession) {
       if (singleplayer || p2pMultiplayer) {
         // in case of p2pMultiplayer there is still flying-squid on the host side

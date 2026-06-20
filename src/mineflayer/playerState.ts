@@ -9,6 +9,14 @@ import { options } from '../optionsStorage'
 const BASE_MOVEMENT_SPEED = 0.1
 const FOV_EFFECT_SCALE = 1
 const ZOOM_FOV = 30
+const STANDING_EYE_HEIGHT = 1.62
+const SNEAK_EYE_HEIGHT = 1.27
+
+const resetPlayerStateReactive = (state: PlayerStateReactive) => {
+  const fresh = getInitialPlayerState()
+  Object.assign(state, fresh)
+  state.eyeHeight = STANDING_EYE_HEIGHT
+}
 
 const updateFovMultiplier = () => {
   if (!playerState.ready || !playerState.reactive) return
@@ -74,6 +82,7 @@ export class PlayerStateControllerMain {
 
   // Held item state
   private isUsingItem = false
+  private eyeHeightWatchInstalled = false
   ready = false
 
   reactive: PlayerStateReactive
@@ -81,16 +90,44 @@ export class PlayerStateControllerMain {
 
   constructor () {
     customEvents.on('mineflayerBotCreated', () => {
-      this.ready = false
-      bot.on('inject_allowed', () => {
-        if (this.ready) return
-        this.ready = true
-        this.botCreated()
-      })
-      bot.on('end', () => {
-        this.ready = false
-      })
+      this.attachBotSession()
     })
+  }
+
+  /**
+   * Register inject_allowed before any async connect work so a slow validate/connect
+   * cannot fire inject before listeners exist (eyeHeight / botCreated race).
+   */
+  private attachBotSession () {
+    this.ready = false
+    this.isUsingItem = false
+    this.timeOffGround = 0
+    this.lastUpdateTime = performance.now()
+
+    const onInjectAllowed = () => {
+      if (this.ready) return
+      this.ready = true
+      const clientState = bot._client?.state
+      console.log('[playerState] inject_allowed', {
+        t: performance.now(),
+        clientState,
+      })
+      this.botCreated()
+    }
+
+    bot.once('inject_allowed', onInjectAllowed)
+    bot.once('end', () => {
+      this.ready = false
+    })
+
+    const clientState = bot._client?.state
+    if (clientState && clientState !== 'handshaking') {
+      console.log('[playerState] inject_allowed already fired before attach', {
+        clientState,
+        eyeHeight: this.reactive?.eyeHeight,
+      })
+      onInjectAllowed()
+    }
   }
 
   private onBotCreatedOrGameJoined () {
@@ -103,8 +140,7 @@ export class PlayerStateControllerMain {
     this.reactive = appViewer.playerState.reactive
     this.utils = getPlayerStateUtils(this.reactive)
 
-    const fresh = getInitialPlayerState()
-    Object.assign(this.reactive, fresh)
+    resetPlayerStateReactive(this.reactive)
     this.reactive.perspective = options.defaultPerspective
     this.onBotCreatedOrGameJoined()
 
@@ -147,8 +183,9 @@ export class PlayerStateControllerMain {
       this.updateMovementState()
       this.reactive.sneaking = bot.controlState.sneak
       this.reactive.flying = gameAdditionalState.isFlying
-      this.reactive.eyeHeight = bot.controlState.sneak && !gameAdditionalState.isFlying ? 1.27 : 1.62
+      this.reactive.eyeHeight = bot.controlState.sneak && !gameAdditionalState.isFlying ? SNEAK_EYE_HEIGHT : STANDING_EYE_HEIGHT
     }
+    updateSneakingOrFlying()
     bot.on('physicsTick', () => {
       if (this.isUsingItem) this.reactive.itemUsageTicks++
       updateSneakingOrFlying()
@@ -176,6 +213,11 @@ export class PlayerStateControllerMain {
     })
 
     this.watchReactive()
+
+    // do not attach on app load since we are not connected yet
+    window.hello = () => {
+      console.log(`Hey, ${bot.username}! This game client is built on top of minecraft-web-client. Join us and let's make the open-source Minecraft client even better!`)
+    }
   }
 
   // #region Movement and Physics State
@@ -279,6 +321,8 @@ export class PlayerStateControllerMain {
   }
 
   watchReactive () {
+    if (this.eyeHeightWatchInstalled) return
+    this.eyeHeightWatchInstalled = true
     subscribeKey(this.reactive, 'eyeHeight', () => {
       appViewer.backend?.updateCamera(bot.entity.position, bot.entity.yaw, bot.entity.pitch)
     })

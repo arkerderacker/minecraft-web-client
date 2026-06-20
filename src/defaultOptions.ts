@@ -74,6 +74,8 @@ export const defaultOptions = {
   singleplayerAutoSave: false,
   alwaysBackupWorldBeforeLoading: undefined as boolean | undefined | null,
   alwaysShowMobileControls: false,
+  /** Portrait viewport: apply `body.rotated` landscape layout without tapping the rotate button. */
+  autoDisplayRotation: false,
   excludeCommunicationDebugEvents: [] as string[],
   preventDevReloadWhilePlaying: false,
   localServerOptions: {

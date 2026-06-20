@@ -454,6 +454,10 @@ export const guiOptionsScheme: {
       alwaysShowMobileControls: {
         text: 'Always Mobile Controls',
       },
+      autoDisplayRotation: {
+        text: 'Auto Landscape Rotation',
+        tooltip: 'On portrait screens, automatically rotate the game to landscape layout (same as the rotate button).',
+      },
       touchButtonsSize: {
         min: 40,
         disableIf: [

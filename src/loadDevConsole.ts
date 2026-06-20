@@ -50,6 +50,7 @@ export const loadDevConsole = () => {
       theme: 'dark',
       target: getDevConsoleMountTarget(),
     })
+    window.__nextConsole['panel'].floatButton.el.style.opacity=0.6
     return window.__nextConsole
   })
 
