@@ -12,12 +12,6 @@ const ZOOM_FOV = 30
 const STANDING_EYE_HEIGHT = 1.62
 const SNEAK_EYE_HEIGHT = 1.27
 
-const resetPlayerStateReactive = (state: PlayerStateReactive) => {
-  const fresh = getInitialPlayerState()
-  Object.assign(state, fresh)
-  state.eyeHeight = STANDING_EYE_HEIGHT
-}
-
 const updateFovMultiplier = () => {
   if (!playerState.ready || !playerState.reactive) return
 
@@ -140,7 +134,8 @@ export class PlayerStateControllerMain {
     this.reactive = appViewer.playerState.reactive
     this.utils = getPlayerStateUtils(this.reactive)
 
-    resetPlayerStateReactive(this.reactive)
+    const fresh = getInitialPlayerState()
+    Object.assign(this.reactive, fresh)
     this.reactive.perspective = options.defaultPerspective
     this.onBotCreatedOrGameJoined()
 

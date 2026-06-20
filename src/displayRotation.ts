@@ -1,6 +1,6 @@
+import { subscribeKey } from 'valtio/utils'
 import { miscUiState } from './globalState'
 import { options } from './optionsStorage'
-import { subscribeKey } from 'valtio/utils'
 
 const STORAGE_KEY = 'displayRotationEnabled'
 

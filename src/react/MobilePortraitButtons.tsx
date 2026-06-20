@@ -16,8 +16,7 @@ const BTN_SCALE = 1.3
 const PORTRAIT_TALL_SCALE = 1.4
 const BTN_GAP = 5
 
-const portraitButtonSize = (viewportPortrait: boolean) =>
-  Math.round(BTN_BASE * BTN_SCALE * (viewportPortrait ? PORTRAIT_TALL_SCALE : 1))
+const portraitButtonSize = (viewportPortrait: boolean) => Math.round(BTN_BASE * BTN_SCALE * (viewportPortrait ? PORTRAIT_TALL_SCALE : 1))
 
 export default () => {
   const [fullScreen, setFullScreen] = useState(false)

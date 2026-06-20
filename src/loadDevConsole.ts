@@ -39,9 +39,9 @@ export const shouldLoadDevConsole = () => {
   return window.location.hash === '#dev' || process.env.NODE_ENV === 'development'
 }
 
-export const loadDevConsole = () => {
+export const loadDevConsole = async () => {
   if (!shouldLoadDevConsole()) return window.__nextConsoleInitPromise
-  if (window.__nextConsole) return Promise.resolve(window.__nextConsole)
+  if (window.__nextConsole) return window.__nextConsole
   if (window.__nextConsoleInitPromise) return window.__nextConsoleInitPromise
 
   window.__nextConsoleInitPromise = import('@royalscome/nextconsole').then(({ default: NextConsole }) => {
@@ -50,7 +50,7 @@ export const loadDevConsole = () => {
       theme: 'dark',
       target: getDevConsoleMountTarget(),
     })
-    window.__nextConsole['panel'].floatButton.el.style.opacity=0.6
+    window.__nextConsole['panel'].floatButton.el.style.opacity = 0.6
     return window.__nextConsole
   })
 
