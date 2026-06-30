@@ -91,8 +91,7 @@ export const showSettingReloadModal = async (params: Omit<ModalParams, 'valueCho
 export const settingNeedsReloadPrompt = (requiresRestart?: boolean, requiresChunksReload?: boolean, requiresRestartWhenInGame?: boolean) => {
   if (requiresRestart) return true
   if (requiresChunksReload && miscUiState.gameLoaded) return true
-  if (requiresRestartWhenInGame && miscUiState.gameLoaded) return true
-  return false
+  return requiresRestartWhenInGame && miscUiState.gameLoaded
 }
 
 const SettingReloadModal = () => {

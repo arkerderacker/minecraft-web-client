@@ -15,12 +15,12 @@ window.nbt = nbt
 
 const VALID_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
 
-const SKIN_TEXTURE_WIDTHS = [64, 128, 256, 512]
+const SKIN_TEXTURE_WIDTHS = new Set([64, 128, 256, 512])
 
 /** Minecraft skin sheets: WxW or Wx(W/2) at standard power-of-two widths. */
 const isLikelySkinImageSize = (width: number, height: number) => {
   if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return false
-  if (!SKIN_TEXTURE_WIDTHS.includes(width)) return false
+  if (!SKIN_TEXTURE_WIDTHS.has(width)) return false
   return height === width || height === width / 2
 }
 
@@ -31,7 +31,7 @@ const readImageDimensions = async (file: File) => {
   return { width, height }
 }
 
-const fileToDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
+const fileToDataUrl = async (file: File) => new Promise<string>((resolve, reject) => {
   const reader = new FileReader()
   reader.onload = () => resolve(reader.result as string)
   reader.onerror = reject

@@ -140,7 +140,7 @@ export const toMajorVersion = version => {
 let prevRenderDistance = options.renderDistance
 export const setRenderDistance = () => {
   assertDefined(appViewer.worldView)
-  let renderDistance = options.renderDistance
+  let { renderDistance } = options
   const zeroRenderDistance = miscUiState.singleplayer && renderDistance === 0
   if (zeroRenderDistance) {
     renderDistance = 1 // mineflayer limitation workaround
