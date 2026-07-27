@@ -26,7 +26,7 @@ export const appAndRendererSharedConfig = () => defineConfig({
         alias: {
             // GitHub install has src/ but no dist/; shim fixes type-only re-exports for rspack
             ...(fs.existsSync(physicsUtilSrcRoot) ? {
-                '@nxg-org/mineflayer-physics-util': path.join(__dirname, './src/shims/mineflayerPhysicsUtilEntry.ts'),
+                '@nxg-org/mineflayer-physics-util': path.join(__dirname, './scripts/mineflayerPhysicsUtilEntry.ts'),
                 // physics-util src lists these as devDeps; resolve from project root when bundling its src
                 '@nxg-org/mineflayer-util-plugin': path.join(__dirname, 'node_modules/@nxg-org/mineflayer-util-plugin'),
                 'prismarine-entity': path.join(__dirname, 'node_modules/prismarine-entity'),
