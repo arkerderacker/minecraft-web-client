@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { getClampedBoatPassengerYaw, isBoatEntityName } from '../../minecraft-renderer/src/three/entity/boatPassengerRotation'
+import { getClampedBoatPassengerYaw, isBoatEntityName } from 'minecraft-renderer/src/three/entity/boatPassengerRotation'
 
 const BOAT_YAW = 1.0
 
