@@ -103,7 +103,7 @@ import { getCurrentProxy, getCurrentUsername } from './react/ServersList'
 import { versionToNumber } from 'mc-assets/dist/utils'
 import { isPlayground } from './playgroundIntegration'
 import { appLoadBackend } from './appViewerLoad'
-import { getCameraMovementMode } from './cameraMovementMode'
+import { getCameraMovementMode, shouldSnapCameraOnMount } from './cameraMovementMode'
 import { FORBIDDEN_VERSION_THRESHOLD } from './supportedVersions.mjs'
 
 window.debug = debug
@@ -865,6 +865,9 @@ export async function connect (connectOptions: ConnectOptions) {
       }
       bot.on('move', () => botPosition())
       bot.on('forcedMove', () => botPosition(true))
+      bot.on('mount', () => {
+        if (shouldSnapCameraOnMount(bot.vehicle?.name)) botPosition(true)
+      })
       botPosition()
 
       progress.setMessage('Setting callbacks')
