@@ -8,7 +8,7 @@ import {
   type MenuBackgroundOptions
 } from 'minecraft-renderer/src'
 import { generateGuiAtlas } from 'minecraft-renderer/src/lib/guiRenderer'
-import { BotEvents } from 'mineflayer'
+import { BotEvents, type EntityMovedMetadata } from 'mineflayer'
 import { activeModalStack, miscUiState } from './globalState'
 import { options } from './optionsStorage'
 import { watchOptionsAfterWorldViewInit } from './watchOptions'
@@ -172,7 +172,7 @@ const connectAppWorldViewToBot = () => {
     entityEquip (e: any) {
       emitEntity(e)
     },
-    entityMoved (e: any, eventMetadata: Record<string, unknown> = {}) {
+    entityMoved (e: any, eventMetadata: EntityMovedMetadata = {}) {
       emitEntity(e, 'entityMoved', eventMetadata)
     },
     entityAttach (_passenger: any, vehicle: any) {
